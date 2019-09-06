@@ -33,8 +33,12 @@ namespace Api.Repositories.Runnings
         {
             using (var conn = GetOpenConnection())
             {
-                var sql = "GetAutoIDNo";
-                var result = await conn.QueryFirstOrDefaultAsync<string>(sql, commandType: CommandType.StoredProcedure);
+                var p = new DynamicParameters();
+                p.Add("@UPDATED_BY", "TEST_API");
+                p.Add("@NewRunningValue", string.Empty, dbType: DbType.String, direction: ParameterDirection.Output);
+
+                var sql = "[KMA_RUNNING_ID.SP_GET_RUNNING_MAP]";
+                var result = await conn.QueryFirstOrDefaultAsync<string>(sql, p, commandType: CommandType.StoredProcedure);
                 return result;
             }
         }
