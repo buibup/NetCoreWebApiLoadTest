@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,17 +10,23 @@ namespace ConsoleApp
     class Program
     {
         private static IServiceProvider _serviceProvider;
+        public static List<Task> TaskList = new List<Task>();
 
-        static async System.Threading.Tasks.Task Main(string[] args)
+        static void Main(string[] args)
         {
-            await Task.Run(() => RunningAsync());
-            await Task.Run(() => RunningAsync());
-            await Task.Run(() => RunningAsync());
-            await Task.Run(() => RunningAsync());
-            await Task.Run(() => RunningAsync());
+
+            TaskList.Add(RunningAsync());
+            TaskList.Add(RunningAsync());
+            TaskList.Add(RunningAsync());
+            TaskList.Add(RunningAsync());
+            TaskList.Add(RunningAsync());
+
+            Task.WaitAll(TaskList.ToArray());
+            Console.WriteLine("Press Enter to exit...");
+            Console.ReadLine();
         }
 
-        static async System.Threading.Tasks.Task RunningAsync()
+        static async Task RunningAsync()
         {
             RegisterServices();
             var service = _serviceProvider.GetService<IRunningOrderRefNoRepository>();
